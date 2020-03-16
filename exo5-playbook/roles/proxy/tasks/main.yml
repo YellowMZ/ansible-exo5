@@ -1,0 +1,31 @@
+---
+### SQUID SERVER #####
+    - name: install squid
+      apt:
+        name: squid
+        state: present
+      notify: start squid
+      become: yes
+
+    - name: change whatever u want
+      replace:
+        dest: /etc/squid/squid.conf
+        regexp: "http_access allow localhost"
+        replace: "http_access allow all"
+      become: yes
+      notify: restart
+
+    #UFW Configuration
+    - name: "UFW - Allow squid on port {{ squid_port }}"
+      ufw:
+        rule: allow
+        port: "{{ squid_port }}"
+        proto: tcp
+      become: yes
+
+    - name: UFW - Allow SSH
+      ufw:
+        rule: allow
+        port: "{{ ssh_port }}"
+        proto: tcp
+      become: yes

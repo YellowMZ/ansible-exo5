@@ -1,0 +1,4 @@
+---
+# defaults file for proxy
+squid_port: "3128"
+ssh_port: "22"
