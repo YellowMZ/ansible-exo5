@@ -1,0 +1,7 @@
+---
+# defaults file for nginx-srv
+http_host: "wordpress"
+http_conf: "wordpress.conf"
+
+http_port: "80"
+ssh_port: "22"

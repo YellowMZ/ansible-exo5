@@ -1,0 +1,50 @@
+---
+# tasks file for nginx-srv
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  become: yes
+
+- name: Install Nginx
+  apt: name={{ item }} state=present
+  become: yes
+  with_items:
+    - nginx
+    - mysql-client
+
+# Nginx Configuration
+- name: Sets Nginx VirtualHost
+  template:
+    src: "files/nginx.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ http_conf }}"
+  notify: reload nginx
+  become: yes
+
+- name: Enables new site
+  file:
+    src: "/etc/nginx/sites-available/{{ http_conf }}"
+    dest: "/etc/nginx/sites-enabled/{{ http_conf }}"
+    state: link
+  notify: reload nginx
+  become: yes
+
+- name: Removes "default" site
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+  notify: reload nginx
+  become: yes
+
+#UFW Configuration
+- name: "UFW - Allow HTTP on port {{ http_port }}"
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+    proto: tcp
+  become: yes
+
+- name: UFW - Allow SSH
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+  become: yes

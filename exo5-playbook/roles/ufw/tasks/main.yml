@@ -1,0 +1,7 @@
+---
+# tasks file for ufw
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  become: yes

@@ -1,0 +1,50 @@
+---
+# tasks file for apache-srv
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  become: yes
+
+- name: Install Apache
+  apt: name={{ item }} state=present
+  become: yes
+  with_items:
+    - apache2
+    - mysql-client
+
+#Apache Configuration
+- name: Set up Apache VirtualHost
+  template:
+    src: "files/apache.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ http_conf }}"
+  notify: reload apache
+  become: yes
+
+- name: Enable rewrite module
+  shell: /usr/sbin/a2enmod rewrite
+  notify: reload apache
+  become: yes
+
+- name: Enable new site
+  shell: /usr/sbin/a2ensite {{ http_conf }}
+  notify: reload apache
+  become: yes
+
+- name: Disable default Apache site
+  shell: /usr/sbin/a2dissite 000-default.conf
+  notify: restart apache
+  become: yes
+
+#UFW Configuration
+- name: "UFW - Allow HTTP on port {{ http_port }}"
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+    proto: tcp
+  become: yes
+
+- name: UFW - Allow SSH
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+  become: yes

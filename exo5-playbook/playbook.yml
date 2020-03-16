@@ -1,0 +1,67 @@
+---
+
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: install python 2
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      become: yes
+
+    - include_role:
+        name: update-upgrade
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+
+#MySql serveur configuration
+- hosts: mysql
+
+  tasks:
+    - include_role:
+        name: mysql
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: ufw
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+
+#Apache serveur configuration
+- hosts: wp-apache
+
+  tasks:
+    - include_role:
+        name: apache
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: php
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: wordpress
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: ufw
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+#Nginx serveur configuration
+- hosts: wp-nginx
+
+  tasks:
+    - include_role:
+        name: nginx
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: php
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: wordpress
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: ufw
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"

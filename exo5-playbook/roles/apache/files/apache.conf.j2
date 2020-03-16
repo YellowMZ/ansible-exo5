@@ -1,0 +1,19 @@
+<VirtualHost 192.168.43.150:{{ http_port }}>
+    ServerAdmin webmaster@localhost
+    ServerName {{ http_host }}
+    DocumentRoot /var/www/{{ http_host }}
+
+    ErrorLog ${APACHE_LOG_DIR}/error.wordpress.log
+    CustomLog ${APACHE_LOG_DIR}/access.wordpress.log combined
+
+    <Directory /var/www/{{ http_host }}>
+          Options -Indexes
+          AllowOverride All
+          Require all granted
+    </Directory>
+
+    <IfModule mod_dir.c>
+        DirectoryIndex index.php index.html index.cgi index.pl  index.xhtml index.htm
+    </IfModule>
+
+</VirtualHost>
