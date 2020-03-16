@@ -1,0 +1,4 @@
+---
+# defaults file for haproxy
+http_port: "80"
+ssh_port: "22"

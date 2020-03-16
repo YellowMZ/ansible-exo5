@@ -1,0 +1,45 @@
+---
+- name: install requirements
+  apt:
+    name:
+      - python3-apt
+      - aptitude
+    state: present
+  become: yes
+
+### HA PROXY SERVER #####
+- name: install haproxy
+  apt:
+    name: haproxy
+    state: present
+  become: yes
+
+- name: rm haproxy.cfg
+  file:
+    path: /etc/haproxy/haproxy.cfg
+    state: absent
+  become: yes
+
+- name: create haproxy.cfg
+  command: touch /etc/haproxy/haproxy.cfg
+  become: yes
+
+- name: include haproxy real conf
+  include: files/haproxy.yml
+  notify: restart haproxy
+  become: yes
+
+#UFW Configuration
+- name: "UFW - Allow HTTP on port {{ http_port }}"
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+    proto: tcp
+  become: yes
+
+- name: UFW - Allow SSH
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+  become: yes
