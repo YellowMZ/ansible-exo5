@@ -13,7 +13,25 @@
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
 
-#MySql serveur configuration
+
+########################################
+#### Proxy serveur configuration ######
+########################################
+- hosts: proxy
+
+  tasks:
+    - include_role:
+        name: proxy
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: ufw
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+
+########################################
+#### MySql serveur configuration ######
+########################################
 - hosts: mysql
 
   tasks:
@@ -22,12 +40,22 @@
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
     - include_role:
+        name: proxy-client
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
         name: ufw
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
 
-#Apache serveur configuration
+########################################
+#### Apache serveur configuration ######
+########################################
 - hosts: wp-apache
+
+  environment:
+    become: yes
+    http_proxy: http://192.168.43.155:3128
 
   tasks:
     - include_role:
@@ -43,10 +71,17 @@
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
     - include_role:
+        name: proxy-client
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
         name: ufw
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
-#Nginx serveur configuration
+
+########################################
+#### Nginx serveur configuration ######
+########################################
 - hosts: wp-nginx
 
   tasks:
@@ -60,6 +95,30 @@
 
     - include_role:
         name: wordpress
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: proxy-client
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: ufw
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+
+
+########################################
+#### haproxy serveur configuration #####
+########################################
+- hosts: haproxy
+
+  tasks:
+    - include_role:
+        name: haproxy
+      when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+    - include_role:
+        name: proxy-client
       when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
     - include_role:

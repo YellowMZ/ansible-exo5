@@ -4,16 +4,15 @@
       apt:
         name: squid
         state: present
-      notify: start squid
       become: yes
 
-    - name: change whatever u want
+    - name: Allow trafic for all
       replace:
         dest: /etc/squid/squid.conf
         regexp: "http_access allow localhost"
         replace: "http_access allow all"
       become: yes
-      notify: restart
+      notify: restart squid
 
     #UFW Configuration
     - name: "UFW - Allow squid on port {{ squid_port }}"

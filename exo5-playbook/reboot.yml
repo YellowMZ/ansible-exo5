@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Reboot the box if kernel updated
+      become: yes
+      command: /sbin/reboot

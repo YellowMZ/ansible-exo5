@@ -1,0 +1,12 @@
+---
+# tasks file for proxy-client
+- name: Proxy Configuration
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: http_proxy="http://192.168.43.155:3128"
+
+#################################################################
+#############      NEED A REBOOT !     ##########################
+#############      USE REBOOT.YML      ##########################
+#################################################################

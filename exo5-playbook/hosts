@@ -47,8 +47,8 @@ mysql ansible_host=192.168.43.153 ansible_user=user
 
 
 #[netservers]
-#haproxy ansible_host=192.168.43.154
-#proxy ansible_host=192.168.43.155
+haproxy ansible_host=192.168.43.154 ansible_user=user
+proxy ansible_host=192.168.43.155 ansible_user=user
 
 
  [all:vars]
